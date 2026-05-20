@@ -1,0 +1,20 @@
+##Challenges Encountered
+
+1. **Connecting to the VM via SSH with a private key file that lacked proper permissions on Windows**  
+   - Initially, the `ssh` command failed with `Warning: Identity file not accessible: No such file or directory` and `Permission denied (publickey)`.  
+   - The root cause was that the private key file (`janice_key.pem`) did not have the correct restrictive permissions required by the OpenSSH client on Windows.  
+   - The issue was resolved by using `icacls` to remove inherited permissions and grant read access only to the current user:  
+     `icacls janice_key.pem /inheritance:r /grant:r "%USERNAME%:R"`  
+   - After fixing the permissions, the SSH client could read the key file, and the connection succeeded once the correct username (`azureuser`) was used.
+
+2. **Deploying a Flask application on an Azure Linux VM with Python environment restrictions**  
+   - After cloning the GitHub repository (`SE-Industrialization`) onto the VM, attempting to install dependencies with `pip3 install -r requirements.txt` failed with the error: `error: externally-managed-environment`.  
+   - This occurs on modern Debian/Ubuntu systems to prevent breaking system Python packages.  
+   - The solution was to create a Python virtual environment (`venv`), but the system did not have `python3-venv` installed. Installing it required `sudo`:  
+     `sudo apt install python3.12-venv -y`  
+   - After installing the package, the virtual environment was created successfully:  
+     `python3 -m venv venv`  
+   - Activating the environment (`source venv/bin/activate`) allowed `pip install -r requirements.txt` to work without system conflicts.  
+   - The Flask app was then run in the background using `nohup` to keep it alive after logout:  
+     `nohup venv/bin/python runserver.py > flask.log 2>&1 &`  
+   - Finally, an inbound security rule for port 8000 (TCP) was added in the Azure Network Security Group to allow external access, making the app reachable at `http://<VM-public-IP>:8000`.
