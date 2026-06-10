@@ -1,0 +1,45 @@
+services:
+  mysql:
+    image: mysql:9.7.0
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: mysecretpassword
+      TZ: Europe/Paris
+    ports:
+      - "3306:3306"
+    volumes:
+      - janicerules:/var/lib/mysql
+    networks:
+      - bridgenet1
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-pmysecretpassword"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  flaskapp:
+    build: .
+    image: janicengugi/flask-mysql-time:latest
+    container_name: flask-app
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+      MYSQL_USER: root
+      MYSQL_PASSWORD: mysecretpassword
+      SERVER_PORT: 5555
+    ports:
+      - "5555:5555"
+    networks:
+      - bridgenet1
+
+volumes:
+  janicerules:
+    external: true
+
+networks:
+  bridgenet1:
+    external: true
+
