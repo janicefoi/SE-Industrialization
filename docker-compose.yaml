@@ -17,10 +17,10 @@ services:
       timeout: 5s
       retries: 10
 
-  flaskapp:
+  flaskapp1:
     build: .
     image: janicengugi/flask-mysql-time:latest
-    container_name: flask-app
+    container_name: flask-app-1
     depends_on:
       mysql:
         condition: service_healthy
@@ -29,9 +29,27 @@ services:
       MYSQL_PORT: 3306
       MYSQL_USER: root
       MYSQL_PASSWORD: mysecretpassword
-      SERVER_PORT: 5555
+      SERVER_PORT: 8001
     ports:
-      - "5555:5555"
+      - "8001:8001"
+    networks:
+      - bridgenet1
+
+  flaskapp2:
+    build: .
+    image: janicengugi/flask-mysql-time:latest
+    container_name: flask-app-2
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+      MYSQL_USER: root
+      MYSQL_PASSWORD: mysecretpassword
+      SERVER_PORT: 8002
+    ports:
+      - "8002:8002"
     networks:
       - bridgenet1
 
