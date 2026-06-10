@@ -40,10 +40,14 @@ jobs:
           host: ${{ secrets.VM_HOST }}
           username: ${{ secrets.VM_USER }}
           key: ${{ secrets.VM_SSH_KEY }}
+          envs: GITHUB_SHA
           script: |
             docker network create bridgenet1 || true
             docker volume create janicerules || true
             cd ~/SE-Industrialization
             git pull origin main
-            docker compose pull
-            docker compose up -d
+            echo "APP1_IMAGE_TAG=$GITHUB_SHA" > .env
+            echo "APP2_IMAGE_TAG=latest" >> .env
+            docker compose pull flaskapp1
+            docker compose up -d --no-deps flaskapp1
+            docker compose up -d --no-deps mysql flaskapp2

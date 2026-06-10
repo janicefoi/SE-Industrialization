@@ -91,9 +91,11 @@ def contact():
 
 @app.route('/version')
 def version():
-    """Returns the current app version."""
     from flask import jsonify
-    return jsonify({"version": "2.0"})
+    return jsonify({
+        "instance": os.getenv("INSTANCE_NAME", "unknown"),
+        "version": "2.0"
+    })
 
 
 @app.route('/about')
