@@ -1,4 +1,18 @@
-##Challenges Encountered
+## GitHub Secrets Reference
+
+The following secrets are configured in the GitHub repository under Settings → Secrets and variables → Actions:
+
+| Secret Name       | Where It Is Used                                                                 |
+|-------------------|----------------------------------------------------------------------------------|
+| DOCKER_USERNAME   | GitHub Actions workflow — used in the `docker/login-action` step to authenticate with Docker Hub |
+| DOCKER_PASSWORD   | GitHub Actions workflow — used alongside DOCKER_USERNAME to log in to Docker Hub (use an access token, not your real password) |
+| VM_HOST           | GitHub Actions workflow — the public IP address of the Azure VM, used in the SSH deploy step to connect to the server |
+| VM_USER           | GitHub Actions workflow — the SSH username (azureuser) used to log into the Azure VM |
+| VM_SSH_KEY        | GitHub Actions workflow — the private key (.pem file contents) used to authenticate the SSH connection to the Azure VM |
+
+---
+
+## Challenges Encountered
 
 1. **Connecting to the VM via SSH with a private key file that lacked proper permissions on Windows**  
    - Initially, the `ssh` command failed with `Warning: Identity file not accessible: No such file or directory` and `Permission denied (publickey)`.  

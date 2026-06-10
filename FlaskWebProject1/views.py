@@ -89,6 +89,13 @@ def contact():
         message='Your contact page.'
     )
 
+@app.route('/version')
+def version():
+    """Returns the current app version."""
+    from flask import jsonify
+    return jsonify({"version": "1.0"})
+
+
 @app.route('/about')
 def about():
     """Renders the about page."""
