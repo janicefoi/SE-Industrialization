@@ -30,6 +30,7 @@ services:
       MYSQL_PASSWORD: mysecretpassword
       SERVER_PORT: 8001
       INSTANCE_NAME: flask-app-1
+      APP_VERSION: "2.0"
     ports:
       - "8001:8001"
     networks:
@@ -48,6 +49,7 @@ services:
       MYSQL_PASSWORD: mysecretpassword
       SERVER_PORT: 8002
       INSTANCE_NAME: flask-app-2
+      APP_VERSION: "1.0"
     ports:
       - "8002:8002"
     networks:

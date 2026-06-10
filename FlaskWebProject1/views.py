@@ -94,7 +94,7 @@ def version():
     from flask import jsonify
     return jsonify({
         "instance": os.getenv("INSTANCE_NAME", "unknown"),
-        "version": "2.0"
+        "version": os.getenv("APP_VERSION", "1.0")
     })
 
 
